@@ -1,7 +1,7 @@
 const path = require( 'path' );
 const { app, dialog, Menu, MenuItem, ipcMain, shell, BrowserWindow } = require( 'electron' );
-const { session } = require( 'electron' );
 const fs = require( 'fs' ).promises;
+const { Server } = require( 'ws' );
 
 // == init window ==================================================================================
 function createWindow() {
@@ -49,6 +49,46 @@ function createWindow() {
       }
     );
   }
+
+  // -- websocket stuff ----------------------------------------------------------------------------
+  let server;
+  const sessions = new Set();
+
+  const openWebSocket = ( port ) => {
+    if ( server ) {
+      showError( 'Server is already running! Close the existing one before opening.' );
+      return;
+    }
+
+    server = new Server( { port } );
+
+    server.on( 'connection', ( ws ) => {
+      sessions.add( ws );
+
+      ws.on( 'message', ( data ) => {
+        window.webContents.send( 'ws', data );
+      } );
+
+      ws.on( 'close', () => {
+        sessions.delete( ws );
+      } );
+    } );
+  };
+
+  const closeWebSocket = () => {
+    if ( !server ) {
+      showError( 'Server is not running!' );
+      return;
+    }
+
+    return new Promise( ( resolve ) => {
+      server.close( () => {
+        server = null;
+        sessions.clear();
+        resolve();
+      } );
+    } );
+  };
 
   // -- handle new ---------------------------------------------------------------------------------
   const handleNew = async ( event, message ) => {
@@ -179,16 +219,30 @@ function createWindow() {
 
   // -- handle error -------------------------------------------------------------------------------
   const handleError = ( event, message ) => {
+    if ( event.sender !== content ) { return; }
+
     showError( message );
   };
   ipcMain.handle( 'error', handleError );
 
   // -- handle changeShouldSave --------------------------------------------------------------------
   const handleChangeShouldSave = ( event, message ) => {
+    if ( event.sender !== content ) { return; }
+
     shouldSave = message.shouldSave;
     changeTitle();
   };
   ipcMain.handle( 'changeShouldSave', handleChangeShouldSave );
+
+  // -- handle ws (from renderer) ------------------------------------------------------------------
+  const handleWs = ( event, message ) => {
+    if ( event.sender !== content ) { return; }
+
+    for ( const session of sessions.values() ) {
+      session.send( JSON.stringify( message ) );
+    }
+  };
+  ipcMain.handle( 'ws', handleWs );
 
   // -- handle open link ---------------------------------------------------------------------------
   const handleOpenLink = ( event, url ) => {
@@ -196,6 +250,14 @@ function createWindow() {
     shell.openExternal( url );
   };
   window.webContents.on( 'new-window', handleOpenLink );
+
+  // -- handle open server -------------------------------------------------------------------------
+  const handleOpenServer = ( event, message ) => {
+    if ( event.sender !== content ) { return; }
+
+    openWebSocket( message.port );
+  };
+  ipcMain.handle( 'openServer', handleOpenServer );
 
   // -- menu ---------------------------------------------------------------------------------------
   const menu = new Menu();
@@ -259,8 +321,25 @@ function createWindow() {
     label: 'View',
     submenu: [
       {
+        role: 'reload'
+      },
+      {
         role: 'toggleDevTools',
         accelerator: 'CmdOrCtrl+Shift+I'
+      }
+    ]
+  } ) );
+
+  menu.append( new MenuItem( {
+    label: 'Connect',
+    submenu: [
+      {
+        label: 'Open WebSocket Server',
+        click: () => window.webContents.send( 'showPortDialog' )
+      },
+      {
+        label: 'Close WebSocket Server',
+        click: () => closeWebSocket()
       }
     ]
   } ) );
@@ -300,17 +379,6 @@ function createWindow() {
     window.destroy();
   };
   window.on( 'close', handleClose );
-
-  // -- csp stuff ----------------------------------------------------------------------------------
-  // TODO: I don't think here is the best place to put this...
-  session.defaultSession.webRequest.onHeadersReceived( ( details, callback ) => {
-    callback( {
-      responseHeaders: {
-        ...details.responseHeaders,
-        'Content-Security-Policy': [ 'default-src \'none\'' ]
-      }
-    } );
-  } );
 }
 
 app.whenReady().then( createWindow );

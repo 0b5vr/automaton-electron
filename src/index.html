@@ -6,6 +6,12 @@
   * {
     margin: 0;
     padding: 0;
+    Font-family: Roboto, sans-serif;
+  }
+
+  body {
+    width: 100vw;
+    height: 100vh;
   }
 
   #divAutomaton {
@@ -14,10 +20,50 @@
     height: 100%;
     overflow: hidden;
   }
+
+  dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  dialog {
+    border: none;
+    margin: auto;
+  }
+
+  .formDialog {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+  }
+
+  .formDialog p {
+    margin: 4px;
+  }
 </style>
 
 <body>
   <div id="divAutomaton"></div>
+
+  <dialog id="dialogPort">
+    <form class="formDialog" method="dialog">
+      <p>
+        Specify a port number
+      </p>
+      <p>
+        <input
+          id="inputPort"
+          type="number"
+          placeholder=""
+          value="12250"
+        />
+      </p>
+      <p>
+        <button value="ok">OK</button>
+        <button value="cancel">Cancel</button>
+      </p>
+    </form>
+  </dialog>
 </body>
 
 <script src="./main.js"></script>

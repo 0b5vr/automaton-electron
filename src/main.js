@@ -81,6 +81,34 @@ automaton.saveContextMenuCommands = [
   }
 ];
 
+// == port dialog ==================================================================================
+const dialogPort = document.getElementById( 'dialogPort' );
+const inputPort = document.getElementById( 'inputPort' );
+
+function showPortDialog() {
+  dialogPort.showModal();
+}
+
+dialogPort.addEventListener( 'close', () => {
+  if ( dialogPort.returnValue === 'ok' ) {
+    ipcRenderer.invoke(
+      'openServer',
+      { port: parseInt( inputPort.value ) }
+    );
+  }
+} );
+
+// == websocket ====================================================================================
+function processWs( raw ) {
+  const data = JSON.parse( raw );
+  if ( data.type === 'update' ) {
+    if ( !isNaN( data.time ) ) {
+      automaton.reset();
+      automaton.update( data.time );
+    }
+  }
+}
+
 // == ipc -> command ===============================================================================
 ipcRenderer.on( 'new', () => newFile() );
 ipcRenderer.on( 'open', () => openFile() );
@@ -88,9 +116,23 @@ ipcRenderer.on( 'save', () => saveFile() );
 ipcRenderer.on( 'saveAs', () => saveFileAs() );
 ipcRenderer.on( 'undo', () => automaton.undo() );
 ipcRenderer.on( 'redo', () => automaton.redo() );
+ipcRenderer.on( 'ws', ( event, data ) => processWs( data ) );
+ipcRenderer.on( 'showPortDialog', () => showPortDialog() );
 ipcRenderer.on( 'openAbout', () => automaton.openAbout() );
 
 // == listener -> ipc ==============================================================================
 automaton.on( 'changeShouldSave', ( event ) => {
   ipcRenderer.invoke( 'changeShouldSave', event );
+} );
+
+automaton.on( 'play', () => {
+  ipcRenderer.invoke( 'ws', { type: 'play' } );
+} );
+
+automaton.on( 'pause', () => {
+  ipcRenderer.invoke( 'ws', { type: 'pause' } );
+} );
+
+automaton.on( 'seek', ( event ) => {
+  ipcRenderer.invoke( 'ws', { type: 'seek', ...event } );
 } );
