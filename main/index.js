@@ -357,7 +357,7 @@ function createWindow() {
   window.setMenu( menu );
 
   // -- open the document --------------------------------------------------------------------------
-  window.loadFile( path.resolve( __dirname, '../dist/index.html' ) );
+  window.loadFile( path.resolve( __dirname, '../dist-renderer/index.html' ) );
 
   // -- handle close -------------------------------------------------------------------------------
   const handleClose = async () => {

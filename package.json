@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "concurrently \"yarn main-dev\" \"yarn renderer-watch\"",
     "main-dev": "electron .",
-    "renderer-watch": "parcel ./src/index.html --public-url ./ --no-hmr --target=electron",
+    "renderer-watch": "parcel ./src/index.html --public-url ./ --no-hmr --target=electron --out-dir dist-renderer",
     "build": "yarn renderer-build && yarn main-build",
     "main-build": "electron-builder --dir",
-    "renderer-build": "parcel build ./src/index.html --public-url ./ --no-hmr --target=electron",
+    "renderer-build": "parcel build ./src/index.html --public-url ./ --target=electron --out-dir dist-renderer",
     "lint": "yarn lint-renderer && yarn lint-main",
     "lint-renderer": "eslint \"renderer/**/*.{ts,tsx}\"",
     "lint-main": "eslint \"main/**/*.{ts,tsx}\""
@@ -19,7 +19,11 @@
     "electron": "^8.2.1",
     "electron-builder": "^22.4.1",
     "eslint": "^6.8.0",
-    "parcel-bundler": "^1.12.4",
-    "typeface-roboto": "^0.0.75"
+    "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "@fms-cat/automaton-with-gui": "^3.0.0-beta1",
+    "typeface-roboto": "^0.0.75",
+    "ws": "^7.2.3"
   }
 }
