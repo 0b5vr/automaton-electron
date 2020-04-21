@@ -167,7 +167,7 @@ function createWindow() {
   const handleSaveAs = async ( event, message ) => {
     if ( event.sender !== content ) { return; }
 
-    const { canceled, newFilePath } = await dialog.showSaveDialog(
+    const { canceled, filePath: newFilePath } = await dialog.showSaveDialog(
       window,
       {
         filters: [ { name: 'Automaton JSON File', extensions: [ 'json' ] } ]
