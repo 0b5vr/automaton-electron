@@ -1,0 +1,71 @@
+
+
+name: Build
+on: [push]
+jobs:
+  build-win:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache Deps
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-yarn-${{ hashFiles( 'yarn.lock' ) }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+    - name: Fetch Deps
+      shell: bash
+      run: yarn
+    - name: Build
+      shell: bash
+      run: yarn build
+    - name: Upload Builds
+      uses: actions/upload-artifact@v1
+      with:
+        name: dist
+        path: dist
+  build-mac:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache Deps
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-yarn-${{ hashFiles( 'yarn.lock' ) }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+    - name: Fetch Deps
+      shell: bash
+      run: yarn
+    - name: Build
+      shell: bash
+      run: yarn build
+    - name: Upload Builds
+      uses: actions/upload-artifact@v1
+      with:
+        name: dist
+        path: dist
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache Deps
+      uses: actions/cache@v1
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-yarn-${{ hashFiles( 'yarn.lock' ) }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+    - name: Fetch Deps
+      shell: bash
+      run: yarn
+    - name: Build
+      shell: bash
+      run: yarn build
+    - name: Upload Builds
+      uses: actions/upload-artifact@v1
+      with:
+        name: dist
+        path: dist
