@@ -22,7 +22,7 @@
     "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
-    "@fms-cat/automaton-with-gui": "^3.0.0-beta1",
+    "@fms-cat/automaton-with-gui": "^3.0.0-beta2",
     "typeface-roboto": "^0.0.75",
     "ws": "^7.2.3"
   }

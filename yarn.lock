@@ -821,10 +821,10 @@
     global-agent "^2.0.2"
     global-tunnel-ng "^2.7.1"
 
-"@fms-cat/automaton-with-gui@^3.0.0-beta1":
-  version "3.0.0-beta1"
-  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-with-gui/-/automaton-with-gui-3.0.0-beta1.tgz#679305010230fcb4eb89ef05ad7a164613e61e40"
-  integrity sha512-HO4JBXzHt5X3lLI7RXSSDlVDfRQHUUd6w4FOAPV/EIxmgoQxwnql7QOWBM4aMwsYCKg2Fbzo1f6LK6AGjgAQVw==
+"@fms-cat/automaton-with-gui@^3.0.0-beta2":
+  version "3.0.0-beta2"
+  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-with-gui/-/automaton-with-gui-3.0.0-beta2.tgz#29fbbc610680557a0a9fe3623240ec85d39fcdeb"
+  integrity sha512-ge8OQzUbiQKNcZUbQVx9zPadZ6yV9a/ddb2xw39Bmn7BrTkxva2kClRkRwHiJJxrdvXehRdluF5SXGGXimd49g==
 
 "@iarna/toml@^2.2.0":
   version "2.2.3"

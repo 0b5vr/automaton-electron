@@ -50,20 +50,39 @@ function createWindow() {
     );
   }
 
+  function toasty( params ) {
+    window.webContents.send( 'toasty', params );
+  }
+
   // -- websocket stuff ----------------------------------------------------------------------------
   let server;
   const sessions = new Set();
 
   const openWebSocket = ( port ) => {
     if ( server ) {
-      showError( 'Server is already running! Close the existing one before opening.' );
+      toasty( {
+        kind: 'error',
+        message: 'WebSocket server is already running! Close the existing one before opening.'
+      } );
       return;
     }
 
     server = new Server( { port } );
 
+    toasty( {
+      kind: 'info',
+      message: `WebSocket server is running @ port ${ port }`,
+      timeout: 5
+    } );
+
     server.on( 'connection', ( ws ) => {
       sessions.add( ws );
+
+      toasty( {
+        kind: 'info',
+        message: 'Someone connects to the WebSocket server',
+        timeout: 2
+      } );
 
       ws.on( 'message', ( data ) => {
         window.webContents.send( 'ws', data );
@@ -71,13 +90,22 @@ function createWindow() {
 
       ws.on( 'close', () => {
         sessions.delete( ws );
+
+        toasty( {
+          kind: 'info',
+          message: 'Someone left the WebSocket session',
+          timeout: 2
+        } );
       } );
     } );
   };
 
   const closeWebSocket = () => {
     if ( !server ) {
-      showError( 'Server is not running!' );
+      toasty( {
+        kind: 'error',
+        message: 'WebSocket server is not running!'
+      } );
       return;
     }
 
@@ -86,6 +114,12 @@ function createWindow() {
         server = null;
         sessions.clear();
         resolve();
+
+        toasty( {
+          kind: 'info',
+          message: 'WebSocket server is closed',
+          timeout: 2
+        } );
       } );
     } );
   };

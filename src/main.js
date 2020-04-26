@@ -6,7 +6,11 @@ const divAutomaton = document.getElementById( 'divAutomaton' );
 
 const automaton = new AutomatonWithGUI(
   undefined,
-  { gui: divAutomaton }
+  {
+    gui: divAutomaton,
+    disableChannelNotUsedWarning: true,
+    installBuiltinFxs: true // TODO: for now
+  }
 );
 
 // == commands =====================================================================================
@@ -43,6 +47,11 @@ async function saveFile() {
 
   if ( !canceled ) {
     automaton.shouldSave = false;
+    automaton.toasty( {
+      kind: 'info',
+      message: 'Saved!',
+      timeout: 2
+    } );
   }
 }
 
@@ -53,6 +62,11 @@ async function saveFileAs() {
 
   if ( !canceled ) {
     automaton.shouldSave = false;
+    automaton.toasty( {
+      kind: 'info',
+      message: 'Saved!',
+      timeout: 2
+    } );
   }
 }
 
@@ -119,6 +133,7 @@ ipcRenderer.on( 'redo', () => automaton.redo() );
 ipcRenderer.on( 'ws', ( event, data ) => processWs( data ) );
 ipcRenderer.on( 'showPortDialog', () => showPortDialog() );
 ipcRenderer.on( 'openAbout', () => automaton.openAbout() );
+ipcRenderer.on( 'toasty', ( event, params ) => automaton.toasty( params ) );
 
 // == listener -> ipc ==============================================================================
 automaton.on( 'changeShouldSave', ( event ) => {
