@@ -1,10 +1,18 @@
 module.exports = {
     "root": true,
 
+    "plugins": [
+        "@typescript-eslint"
+    ],
+
     "env": {
         "es6": true,
+        "browser": true,
+        "node": true,
         "commonjs": true
     },
+
+    "parser": "@typescript-eslint/parser",
 
     "parserOptions": {
         "sourceType": "module",
@@ -13,6 +21,8 @@ module.exports = {
 
     "extends": [
         "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended"
     ],
 
     "globals": {
@@ -21,7 +31,7 @@ module.exports = {
 
     "rules": {
         // basics
-        "indent": [ "error", 2, { // indentation should be 2 spaces
+        "@typescript-eslint/indent": [ "error", 2, { // indentation should be 2 spaces
             "flatTernaryExpressions": true, // ternary should be performed in flat
             "MemberExpression": 1 // member chain should have 2 spaces
         } ], // it forces 2 spaces indentation
@@ -39,7 +49,7 @@ module.exports = {
         "eol-last": [ "error", "always" ], // eof newline is cool
 
         // variables
-        "no-unused-vars": [ "warn" ], // draw yellow line under unused vars
+        "@typescript-eslint/no-unused-vars": [ "warn" ], // draw yellow line under unused vars
         "no-undef": [ "warn" ], // draws yellow line under undefined vars
         "no-var": [ "error" ], // fuck you, var
         "prefer-const": [ "error" ], // const is better than let
@@ -75,5 +85,13 @@ module.exports = {
         "no-eval": [ "off" ], // we need to go the evil way
         "no-implied-eval": [ "warn" ], // ok don't
         "no-console": [ "error", { allow: [ "info", "warn", "error" ] } ], // don't forget to remove `console.log` !
+
+        // typescript-specifics
+        "@typescript-eslint/no-explicit-any": [ "off" ], // yea
+        "@typescript-eslint/no-inferrable-types": [ "off" ], // it's ok
+        "@typescript-eslint/no-non-null-assertion": [ "off" ], // bang is sometimes required
+        "@typescript-eslint/no-empty-interface": [ "off" ], // we need to perform mixins
+        "@typescript-eslint/explicit-function-return-type": [ "error", { "allowExpressions": true } ], // return type is required
+        "@typescript-eslint/explicit-member-accessibility": [ "error" ], // `public` / `private` for members and methods are required
     }
 };

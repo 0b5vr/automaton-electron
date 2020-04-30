@@ -1,10 +1,57 @@
-const path = require( 'path' );
-const { app, dialog, Menu, MenuItem, ipcMain, shell, BrowserWindow } = require( 'electron' );
-const fs = require( 'fs' ).promises;
-const { Server } = require( 'ws' );
+import { BrowserWindow, Menu, MenuItem, app, dialog, ipcMain, shell } from 'electron';
+import WebSocket, { Server } from 'ws';
+import { ToastyParams } from '@fms-cat/automaton-with-gui/types/GUIRemocon';
+import fs from 'fs';
+import path from 'path';
+import recursive from 'recursive-readdir';
+
+// == userdata management ==========================================================================
+const dirAutomaton = path.resolve( app.getPath( 'home' ), '.automaton' );
+const dirAutomatonFxs = path.resolve( dirAutomaton, 'fxs' );
+
+/**
+ * @param {string} path
+ */
+async function ensureDir( path: string ): Promise<void> {
+  await fs.promises.access( path, fs.constants.F_OK ).catch( async ( error ) => {
+    if ( error.code === 'ENOENT' ) {
+      await fs.promises.mkdir( path );
+    } else {
+      throw error;
+    }
+  } );
+}
+
+async function ensureAutomatonDirs(): Promise<void> {
+  await ensureDir( dirAutomaton );
+  await ensureDir( dirAutomatonFxs );
+}
+
+async function loadFxDefinitions(): Promise<{ [ name: string ]: string }> {
+  await ensureAutomatonDirs();
+
+  const result: { [ name: string ]: string } = {};
+
+  const files = await recursive( dirAutomatonFxs );
+  await Promise.all(
+    files.map( async ( filepath ) => {
+      // ignore files that is not .js
+      if ( path.extname( filepath ) !== '.js' ) { return; }
+
+      const key = path
+        .relative( dirAutomatonFxs, filepath )
+        .replace( /\\/g, '/' )
+        .replace( /.js$/, '' );
+
+      result[ key ] = filepath;
+    } )
+  );
+
+  return result;
+}
 
 // == init window ==================================================================================
-function createWindow() {
+function createWindow(): void {
   const window = new BrowserWindow( {
     width: 1280,
     height: 320,
@@ -19,11 +66,11 @@ function createWindow() {
   const content = window.webContents;
 
   // -- state --------------------------------------------------------------------------------------
-  let currentFilePath = null;
+  let currentFilePath: string | null = null;
   let shouldSave = false;
 
   // -- helper -------------------------------------------------------------------------------------
-  function changeTitle() {
+  function changeTitle(): void {
     let str = 'Automaton';
 
     if ( currentFilePath != null ) {
@@ -37,11 +84,8 @@ function createWindow() {
     window.setTitle( str );
   }
 
-  /**
-   * @param { string } message
-   */
-  function showError( message ) {
-    dialog.showMessageBox(
+  async function showError( message: string ): Promise<void> {
+    await dialog.showMessageBox(
       window,
       {
         type: 'error',
@@ -50,15 +94,15 @@ function createWindow() {
     );
   }
 
-  function toasty( params ) {
+  function toasty( params: ToastyParams ): void {
     window.webContents.send( 'toasty', params );
   }
 
   // -- websocket stuff ----------------------------------------------------------------------------
-  let server;
-  const sessions = new Set();
+  let server: Server | null = null;
+  const sessions = new Set<WebSocket>();
 
-  const openWebSocket = ( port ) => {
+  function openWebSocket( port: number ): void {
     if ( server ) {
       toasty( {
         kind: 'error',
@@ -98,9 +142,9 @@ function createWindow() {
         } );
       } );
     } );
-  };
+  }
 
-  const closeWebSocket = () => {
+  function closeWebSocket(): void {
     if ( !server ) {
       toasty( {
         kind: 'error',
@@ -109,23 +153,23 @@ function createWindow() {
       return;
     }
 
-    return new Promise( ( resolve ) => {
-      server.close( () => {
-        server = null;
-        sessions.clear();
-        resolve();
+    server.close( () => {
+      server = null;
+      sessions.clear();
 
-        toasty( {
-          kind: 'info',
-          message: 'WebSocket server is closed',
-          timeout: 2
-        } );
+      toasty( {
+        kind: 'info',
+        message: 'Closed WebSocket server',
+        timeout: 2
       } );
     } );
-  };
+  }
 
   // -- handle new ---------------------------------------------------------------------------------
-  const handleNew = async ( event, message ) => {
+  async function handleNew(
+    event: Electron.IpcMainInvokeEvent,
+    message: { shouldSave: boolean }
+  ): Promise<{ canceled: boolean } | void> {
     if ( event.sender !== content ) { return; }
 
     if ( message.shouldSave ) {
@@ -145,11 +189,15 @@ function createWindow() {
     changeTitle();
 
     return { canceled: false };
-  };
+  }
+
   ipcMain.handle( 'new', handleNew );
 
   // -- handle open --------------------------------------------------------------------------------
-  const handleOpen = async ( event, message ) => {
+  async function handleOpen(
+    event: Electron.IpcMainInvokeEvent,
+    message: { shouldSave: boolean }
+  ): Promise<{ canceled: boolean; data: string | null } | void> {
     if ( event.sender !== content ) { return; }
 
     if ( message.shouldSave ) {
@@ -181,9 +229,9 @@ function createWindow() {
 
     const newFilePath = filePaths[ 0 ];
 
-    let error;
-    const data = await fs.readFile( newFilePath, { encoding: 'utf8' } )
-      .catch( ( e ) => { error = e; } );
+    let error: any;
+    const data = await fs.promises.readFile( newFilePath, { encoding: 'utf8' } )
+      .catch( ( e ) => { error = e; return null; } );
 
     if ( error ) {
       showError( JSON.stringify( error ) );
@@ -194,11 +242,15 @@ function createWindow() {
     changeTitle();
 
     return { canceled: false, data };
-  };
+  }
+
   ipcMain.handle( 'open', handleOpen );
 
   // -- handle save as -----------------------------------------------------------------------------
-  const handleSaveAs = async ( event, message ) => {
+  async function handleSaveAs(
+    event: Electron.IpcMainInvokeEvent,
+    message: { data: string }
+  ): Promise<{ canceled: boolean } | void> {
     if ( event.sender !== content ) { return; }
 
     const { canceled, filePath: newFilePath } = await dialog.showSaveDialog(
@@ -212,8 +264,8 @@ function createWindow() {
       return { canceled: true };
     }
 
-    let error;
-    await fs.writeFile( newFilePath, message.data )
+    let error: any;
+    await fs.promises.writeFile( newFilePath!, message.data )
       .catch( ( e ) => { error = e; } );
 
     if ( error ) {
@@ -221,23 +273,27 @@ function createWindow() {
       return { canceled: true };
     }
 
-    currentFilePath = newFilePath;
+    currentFilePath = newFilePath ?? null;
     changeTitle();
 
     return { canceled: false };
-  };
+  }
+
   ipcMain.handle( 'saveAs', handleSaveAs );
 
   // -- handle save --------------------------------------------------------------------------------
-  const handleSave = async ( event, message ) => {
+  async function handleSave(
+    event: Electron.IpcMainInvokeEvent,
+    message: { data: string }
+  ): Promise<{ canceled: boolean } | void> {
     if ( event.sender !== content ) { return; }
 
     if ( currentFilePath == null ) {
       return await handleSaveAs( event, message );
     }
 
-    let error;
-    await fs.writeFile( currentFilePath, message.data )
+    let error: any;
+    await fs.promises.writeFile( currentFilePath, message.data )
       .catch( ( e ) => { error = e; } );
 
     if ( error ) {
@@ -248,50 +304,84 @@ function createWindow() {
     changeTitle();
 
     return { canceled: false };
-  };
+  }
+
   ipcMain.handle( 'save', handleSave );
 
   // -- handle error -------------------------------------------------------------------------------
-  const handleError = ( event, message ) => {
+  function handleError(
+    event: Electron.IpcMainInvokeEvent,
+    message: any
+  ): void {
     if ( event.sender !== content ) { return; }
 
     showError( message );
-  };
+  }
+
   ipcMain.handle( 'error', handleError );
 
   // -- handle changeShouldSave --------------------------------------------------------------------
-  const handleChangeShouldSave = ( event, message ) => {
+  function handleChangeShouldSave(
+    event: Electron.IpcMainInvokeEvent,
+    message: { shouldSave: boolean }
+  ): void {
     if ( event.sender !== content ) { return; }
 
     shouldSave = message.shouldSave;
     changeTitle();
-  };
+  }
+
   ipcMain.handle( 'changeShouldSave', handleChangeShouldSave );
 
+  // -- handle changeShouldSave --------------------------------------------------------------------
+  async function handleLoadFxDefinitions(
+    event: Electron.IpcMainInvokeEvent
+  ): Promise<{ [ name: string ]: string } | void> {
+    if ( event.sender !== content ) { return; }
+
+    const fxDefinitions = await loadFxDefinitions();
+
+    return fxDefinitions;
+  }
+
+  ipcMain.handle( 'loadFxDefinitions', handleLoadFxDefinitions );
+
   // -- handle ws (from renderer) ------------------------------------------------------------------
-  const handleWs = ( event, message ) => {
+  function handleWs(
+    event: Electron.IpcMainInvokeEvent,
+    message: any
+  ): void {
     if ( event.sender !== content ) { return; }
 
     for ( const session of sessions.values() ) {
       session.send( JSON.stringify( message ) );
     }
-  };
+  }
+
   ipcMain.handle( 'ws', handleWs );
 
-  // -- handle open link ---------------------------------------------------------------------------
-  const handleOpenLink = ( event, url ) => {
-    event.preventDefault();
-    shell.openExternal( url );
-  };
-  window.webContents.on( 'new-window', handleOpenLink );
-
   // -- handle open server -------------------------------------------------------------------------
-  const handleOpenServer = ( event, message ) => {
+  function handleOpenServer(
+    event: Electron.IpcMainInvokeEvent,
+    message: { port: number }
+  ): void {
     if ( event.sender !== content ) { return; }
 
     openWebSocket( message.port );
-  };
+  }
+
   ipcMain.handle( 'openServer', handleOpenServer );
+
+  // -- handle open link ---------------------------------------------------------------------------
+  function handleOpenLink(
+    event: Electron.Event,
+    url: string
+  ): void {
+    event.preventDefault();
+    shell.openExternal( url );
+  }
+
+  window.webContents.on( 'new-window', handleOpenLink );
 
   // -- menu ---------------------------------------------------------------------------------------
   const menu = new Menu();
@@ -317,7 +407,12 @@ function createWindow() {
         accelerator: 'CmdOrCtrl+Shift+S',
         click: () => window.webContents.send( 'saveAs' )
       },
-      { label: 'haha', type: 'separator' },
+      { type: 'separator' },
+      {
+        label: 'Reload Fx Definitions',
+        click: () => window.webContents.send( 'reloadFxDefinitions' )
+      },
+      { type: 'separator' },
       {
         role: 'close',
         accelerator: 'CmdOrCtrl+W'
@@ -394,7 +489,7 @@ function createWindow() {
   window.loadFile( path.resolve( __dirname, '../dist-renderer/index.html' ) );
 
   // -- handle close -------------------------------------------------------------------------------
-  const handleClose = async () => {
+  async function handleClose(): Promise<void> {
     if ( shouldSave ) {
       const { response } = await dialog.showMessageBox(
         window,
@@ -411,7 +506,8 @@ function createWindow() {
     }
 
     window.destroy();
-  };
+  }
+
   window.on( 'close', handleClose );
 }
 

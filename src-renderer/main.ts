@@ -1,8 +1,9 @@
 import { AutomatonWithGUI } from '@fms-cat/automaton-with-gui';
+import { FxDefinition } from '@fms-cat/automaton/types/types/FxDefinition';
 import { ipcRenderer } from 'electron';
 
 // == init automaton ===============================================================================
-const divAutomaton = document.getElementById( 'divAutomaton' );
+const divAutomaton = document.getElementById( 'divAutomaton' ) as HTMLDivElement;
 
 const automaton = new AutomatonWithGUI(
   undefined,
@@ -14,7 +15,7 @@ const automaton = new AutomatonWithGUI(
 );
 
 // == commands =====================================================================================
-async function newFile() {
+async function newFile(): Promise<void> {
   const { canceled } = await ipcRenderer.invoke(
     'new',
     { shouldSave: automaton.shouldSave }
@@ -25,7 +26,7 @@ async function newFile() {
   }
 }
 
-async function openFile() {
+async function openFile(): Promise<void> {
   const { canceled, data } = await ipcRenderer.invoke(
     'open',
     { shouldSave: automaton.shouldSave }
@@ -40,7 +41,7 @@ async function openFile() {
   }
 }
 
-async function saveFile() {
+async function saveFile(): Promise<void> {
   const data = JSON.stringify( automaton.serialize() );
 
   const { canceled } = await ipcRenderer.invoke( 'save', { data } );
@@ -55,7 +56,7 @@ async function saveFile() {
   }
 }
 
-async function saveFileAs() {
+async function saveFileAs(): Promise<void> {
   const data = JSON.stringify( automaton.serialize() );
 
   const { canceled } = await ipcRenderer.invoke( 'saveAs', { data } );
@@ -96,10 +97,10 @@ automaton.saveContextMenuCommands = [
 ];
 
 // == port dialog ==================================================================================
-const dialogPort = document.getElementById( 'dialogPort' );
-const inputPort = document.getElementById( 'inputPort' );
+const dialogPort = document.getElementById( 'dialogPort' ) as HTMLDialogElement;
+const inputPort = document.getElementById( 'inputPort' ) as HTMLInputElement;
 
-function showPortDialog() {
+function showPortDialog(): void {
   dialogPort.showModal();
 }
 
@@ -113,7 +114,7 @@ dialogPort.addEventListener( 'close', () => {
 } );
 
 // == websocket ====================================================================================
-function processWs( raw ) {
+function processWs( raw: string ): void {
   const data = JSON.parse( raw );
   if ( data.type === 'update' ) {
     if ( !isNaN( data.time ) ) {
@@ -123,11 +124,38 @@ function processWs( raw ) {
   }
 }
 
+// == load fx definitions ==========================================================================
+async function loadFxDefinitions(): Promise<void> {
+  const nameCodeMap: { [ name: string ]: string }
+    = await ipcRenderer.invoke( 'loadFxDefinitions' );
+
+  const fxDefinitions: { [ name: string ]: FxDefinition } = {};
+  await Promise.all(
+    Object.entries( nameCodeMap ).map( async ( [ name, url ] ) => {
+      const m = await import( url ).catch( ( error ) => {
+        automaton.toasty( {
+          kind: 'error',
+          message: `Failed to load the user defined fx "${ name }" !`
+        } );
+        console.error( error );
+        return null;
+      } );
+
+      if ( m != null ) {
+        fxDefinitions[ name ] = m.default;
+      }
+    } )
+  );
+  automaton.addFxDefinitions( fxDefinitions );
+}
+loadFxDefinitions();
+
 // == ipc -> command ===============================================================================
 ipcRenderer.on( 'new', () => newFile() );
 ipcRenderer.on( 'open', () => openFile() );
 ipcRenderer.on( 'save', () => saveFile() );
 ipcRenderer.on( 'saveAs', () => saveFileAs() );
+ipcRenderer.on( 'reloadFxDefinitions', () => loadFxDefinitions() );
 ipcRenderer.on( 'undo', () => automaton.undo() );
 ipcRenderer.on( 'redo', () => automaton.redo() );
 ipcRenderer.on( 'ws', ( event, data ) => processWs( data ) );

@@ -1,28 +1,36 @@
 {
   "name": "automaton-electron",
   "version": "1.0.0",
-  "main": "main/index.js",
+  "main": "dist-main/index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently \"yarn main-dev\" \"yarn renderer-watch\"",
-    "main-dev": "electron .",
-    "renderer-watch": "parcel ./src/index.html --public-url ./ --no-hmr --target=electron --out-dir dist-renderer",
-    "build": "yarn renderer-build && yarn main-build",
-    "main-build": "electron-builder --dir",
-    "renderer-build": "parcel build ./src/index.html --public-url ./ --target=electron --out-dir dist-renderer",
+    "dev": "yarn main-build && concurrently \"yarn electron-dev\" \"yarn renderer-watch\"",
+    "electron-dev": "electron .",
+    "renderer-watch": "parcel ./src-renderer/index.html --public-url ./ --no-hmr --target=electron --out-dir dist-renderer",
+    "build": "yarn main-build && yarn renderer-build && yarn electron-build",
+    "electron-build": "electron-builder --dir",
+    "main-build": "parcel build ./src-main/index.ts --target=electron --out-dir dist-main",
+    "renderer-build": "parcel build ./src-renderer/index.html --public-url ./ --target=electron --out-dir dist-renderer",
     "lint": "yarn lint-renderer && yarn lint-main",
-    "lint-renderer": "eslint \"renderer/**/*.{ts,tsx}\"",
-    "lint-main": "eslint \"main/**/*.{ts,tsx}\""
+    "lint-renderer": "eslint \"src-renderer/**/*.ts\"",
+    "lint-main": "eslint \"src-main/**/*.js\""
   },
   "devDependencies": {
+    "@types/recursive-readdir": "^2.2.0",
+    "@types/ws": "^7.2.4",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
     "concurrently": "^5.1.0",
     "electron": "^8.2.1",
     "electron-builder": "^22.4.1",
     "eslint": "^6.8.0",
-    "parcel-bundler": "^1.12.4"
+    "parcel-bundler": "^1.12.4",
+    "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@fms-cat/automaton-with-gui": "^3.0.0-beta2",
+    "@fms-cat/automaton": "3.0.0-beta3",
+    "@fms-cat/automaton-with-gui": "3.0.0-beta3",
+    "recursive-readdir": "^2.2.2",
     "typeface-roboto": "^0.0.75",
     "ws": "^7.2.3"
   }
