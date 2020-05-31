@@ -821,15 +821,15 @@
     global-agent "^2.0.2"
     global-tunnel-ng "^2.7.1"
 
-"@fms-cat/automaton-with-gui@3.0.0-beta3":
-  version "3.0.0-beta3"
-  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-with-gui/-/automaton-with-gui-3.0.0-beta3.tgz#1059c8f3c7d349e44b106d7e786f757587b24313"
-  integrity sha512-dv4JSWS6K3L3H263emdO+AkPWOIPrKnnHfkjUMetB5lvUqu9IQVZTadAe/QRAVs3caObSiw6KwLmmmcAOcNu9Q==
+"@fms-cat/automaton-with-gui@3.0.0-beta5":
+  version "3.0.0-beta5"
+  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-with-gui/-/automaton-with-gui-3.0.0-beta5.tgz#aca60c6c1771878c9a533c9650f6ad8ee4abe6a8"
+  integrity sha512-XLqIDZPseUSxPDYhz+6VZek8zC0V9bbDydrk6f5YIsT8PXNspA09fAz04CVGtsr1BNpwl/smjv1cBPcPk5Y03g==
 
-"@fms-cat/automaton@3.0.0-beta3":
-  version "3.0.0-beta3"
-  resolved "https://registry.yarnpkg.com/@fms-cat/automaton/-/automaton-3.0.0-beta3.tgz#909231dc4497cf8a4209370b3542a4520b669525"
-  integrity sha512-hvg6zOTBm69shX2Iqrp6WReQLqL0clezmyU7FsWzsCFsU6VTzYsQZSnih0Wdoelvptdt29von9h8hwxdqaDH8A==
+"@fms-cat/automaton@3.0.0-beta5":
+  version "3.0.0-beta5"
+  resolved "https://registry.yarnpkg.com/@fms-cat/automaton/-/automaton-3.0.0-beta5.tgz#4eaba63123ec30d2eea3158b09abf705d7ec709c"
+  integrity sha512-6N98uYg22rwZIorrvTBvtTJ4uyBU5CzpxyxOisl0GQnSYJKyJSFoLpMcGHVAI/M3wGhEIK2pRu6K7kYdT6vc8A==
 
 "@iarna/toml@^2.2.0":
   version "2.2.3"

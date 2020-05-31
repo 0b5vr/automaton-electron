@@ -28,8 +28,8 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@fms-cat/automaton": "3.0.0-beta3",
-    "@fms-cat/automaton-with-gui": "3.0.0-beta3",
+    "@fms-cat/automaton": "3.0.0-beta5",
+    "@fms-cat/automaton-with-gui": "3.0.0-beta5",
     "recursive-readdir": "^2.2.2",
     "typeface-roboto": "^0.0.75",
     "ws": "^7.2.3"
