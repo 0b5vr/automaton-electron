@@ -21,7 +21,7 @@
     "@typescript-eslint/eslint-plugin": "^2.30.0",
     "@typescript-eslint/parser": "^2.30.0",
     "concurrently": "^5.1.0",
-    "electron": "^8.2.1",
+    "electron": "^8.5.1",
     "electron-builder": "^22.4.1",
     "eslint": "^6.8.0",
     "parcel-bundler": "^1.12.4",
