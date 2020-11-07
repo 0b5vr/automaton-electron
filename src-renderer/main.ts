@@ -37,6 +37,7 @@ async function openFile(): Promise<void> {
       automaton.deserialize( JSON.parse( data ) );
     } catch ( e ) {
       ipcRenderer.invoke( 'error', `An error has occured while opening the file:\n${ e }` );
+      console.error( e );
     }
   }
 }
