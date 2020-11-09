@@ -2,6 +2,8 @@
 
 WIP
 
+It's very unstable and not polished
+
 ## WebSocket
 
 - Can send:
