@@ -821,6 +821,13 @@
     global-agent "^2.0.2"
     global-tunnel-ng "^2.7.1"
 
+"@fms-cat/automaton-fxs@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-fxs/-/automaton-fxs-3.0.0.tgz#606e61f7267a41bc9055a408bbaf540ae3a7d3bc"
+  integrity sha512-LV5nLyaVgaDnz1dEaMYSr8sGh8Tn6ZAcKmxw66upMgnePU3rV95Xia7ZkLK+cbJVooC/TIq7fCFpSC56C0eMjg==
+  dependencies:
+    "@fms-cat/automaton" "^3.0.0"
+
 "@fms-cat/automaton-with-gui@3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@fms-cat/automaton-with-gui/-/automaton-with-gui-3.0.0.tgz#adb618d98f25a20391bed0ba3de3b3c6b5f083e7"

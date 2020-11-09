@@ -1,4 +1,5 @@
-import { AutomatonWithGUI } from '@fms-cat/automaton-with-gui';
+import * as AutomatonFxs from '@fms-cat/automaton-fxs';
+import { AutomatonWithGUI, SerializedAutomatonWithGUI } from '@fms-cat/automaton-with-gui';
 import { FxDefinition } from '@fms-cat/automaton/types/types/FxDefinition';
 import { ipcRenderer } from 'electron';
 
@@ -9,8 +10,8 @@ const automaton = new AutomatonWithGUI(
   undefined,
   {
     gui: divAutomaton,
+    fxDefinitions: AutomatonFxs,
     disableChannelNotUsedWarning: true,
-    installBuiltinFxs: true // TODO: for now
   }
 );
 
@@ -22,7 +23,13 @@ async function newFile(): Promise<void> {
   );
 
   if ( !canceled ) {
-    automaton.deserialize();
+    const newData: SerializedAutomatonWithGUI = {
+      version: '3.0.0',
+      resolution: 100,
+      curves: [],
+      channels: {},
+    };
+    automaton.deserialize( newData );
   }
 }
 
