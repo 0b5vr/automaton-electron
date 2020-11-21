@@ -28,9 +28,9 @@
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "@fms-cat/automaton": "3.1.0",
-    "@fms-cat/automaton-fxs": "3.1.0",
-    "@fms-cat/automaton-with-gui": "3.1.0",
+    "@fms-cat/automaton": "4.0.0",
+    "@fms-cat/automaton-fxs": "4.0.1",
+    "@fms-cat/automaton-with-gui": "4.0.0",
     "recursive-readdir": "^2.2.2",
     "typeface-roboto": "^0.0.75",
     "ws": "^7.2.3"

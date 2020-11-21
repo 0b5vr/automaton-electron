@@ -1,6 +1,6 @@
 import * as AutomatonFxs from '@fms-cat/automaton-fxs';
 import { AutomatonWithGUI, SerializedAutomatonWithGUI } from '@fms-cat/automaton-with-gui';
-import { FxDefinition } from '@fms-cat/automaton/types/types/FxDefinition';
+import { FxDefinition } from '@fms-cat/automaton';
 import { ipcRenderer } from 'electron';
 
 // == init automaton ===============================================================================
@@ -24,10 +24,10 @@ async function newFile(): Promise<void> {
 
   if ( !canceled ) {
     const newData: SerializedAutomatonWithGUI = {
-      version: '3.0.0',
+      version: '4.0.0',
       resolution: 100,
       curves: [],
-      channels: {},
+      channels: [],
     };
     automaton.deserialize( newData );
   }
