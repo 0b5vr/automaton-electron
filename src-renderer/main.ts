@@ -1,5 +1,5 @@
 import * as AutomatonFxs from '@fms-cat/automaton-fxs';
-import { AutomatonWithGUI, SerializedAutomatonWithGUI } from '@fms-cat/automaton-with-gui';
+import { AutomatonWithGUI } from '@fms-cat/automaton-with-gui';
 import { FxDefinition } from '@fms-cat/automaton';
 import { ipcRenderer } from 'electron';
 
@@ -23,13 +23,7 @@ async function newFile(): Promise<void> {
   );
 
   if ( !canceled ) {
-    const newData: SerializedAutomatonWithGUI = {
-      version: '4.0.0',
-      resolution: 100,
-      curves: [],
-      channels: [],
-    };
-    automaton.deserialize( newData );
+    automaton.deserialize( AutomatonWithGUI.compat() );
   }
 }
 
@@ -41,7 +35,7 @@ async function openFile(): Promise<void> {
 
   if ( !canceled ) {
     try {
-      automaton.deserialize( JSON.parse( data ) );
+      automaton.deserialize( AutomatonWithGUI.compat( JSON.parse( data ) ) );
     } catch ( e ) {
       ipcRenderer.invoke( 'error', `An error has occured while opening the file:\n${ e }` );
       console.error( e );

@@ -828,10 +828,10 @@
   dependencies:
     "@fms-cat/automaton" "^4.0.0"
 
-"@fms-cat/automaton-with-gui@4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-with-gui/-/automaton-with-gui-4.0.0.tgz#acbf87a1179d24c5721aa1ea18ee98bd3bbb9d39"
-  integrity sha512-+FmIc3eHQFV7z/M0tVmCnVVarB1K97kRX0r8zQFzGquQdtTpt4WZ5mAZkbh54GbY6vaSqJx9qnMf2WMOeoKuFw==
+"@fms-cat/automaton-with-gui@4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-with-gui/-/automaton-with-gui-4.0.2.tgz#0160cac65827547c618ae9ee8638c2311b6682d2"
+  integrity sha512-qzImHxsJVVp/PakgDSWDHJAyftDs8x6A6vFq1BjZzchB3pwdFYKNXz+Qnb1kasnh1S9t8j6G58zOCUeeM5cT8w==
   dependencies:
     "@fms-cat/automaton" "^4.0.0"
 
