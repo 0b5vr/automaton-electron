@@ -273,7 +273,7 @@ function createWindow(): void {
       return { canceled: true };
     }
 
-    currentFilePath = newFilePath ?? null;
+    currentFilePath = newFilePath!;
     changeTitle();
 
     return { canceled: false };
