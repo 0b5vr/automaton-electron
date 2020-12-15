@@ -98,6 +98,22 @@ automaton.saveContextMenuCommands = [
   }
 ];
 
+// == update loop ==================================================================================
+let time = 0;
+function update(): void {
+  if ( automaton.time === time ) {
+    // we don't have to update!
+  } else {
+    if ( time > automaton.time ) { // moving time backwards
+      automaton.reset();
+    }
+    automaton.update( time );
+  }
+
+  requestAnimationFrame( update );
+}
+update();
+
 // == port dialog ==================================================================================
 const dialogPort = document.getElementById( 'dialogPort' ) as HTMLDialogElement;
 const inputPort = document.getElementById( 'inputPort' ) as HTMLInputElement;
@@ -120,8 +136,7 @@ function processWs( raw: string ): void {
   const data = JSON.parse( raw );
   if ( data.type === 'update' ) {
     if ( !isNaN( data.time ) ) {
-      automaton.reset();
-      automaton.update( data.time );
+      time = data.time;
     }
   }
 }
