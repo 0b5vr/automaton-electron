@@ -104,7 +104,7 @@ function update(): void {
   if ( automaton.time === time ) {
     // we don't have to update!
   } else {
-    if ( time > automaton.time ) { // moving time backwards
+    if ( time < automaton.time ) { // moving time backwards
       automaton.reset();
     }
     automaton.update( time );
