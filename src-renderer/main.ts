@@ -17,6 +17,38 @@ const automaton = new AutomatonWithGUI(
   }
 );
 
+// == update loop ==================================================================================
+let time = 0;
+function update(): void {
+  if ( automaton.time === time ) {
+    // we don't have to update!
+  } else {
+    if ( time < automaton.time ) { // moving time backwards
+      automaton.reset();
+    }
+    automaton.update( time );
+  }
+
+  requestAnimationFrame( update );
+}
+update();
+
+// == websocket ====================================================================================
+function processWs( raw: string ): void {
+  const data: ReceivingEvent = JSON.parse( raw );
+  if ( data.type === 'update' ) {
+    if ( !isNaN( data.time ) ) {
+      time = data.time;
+    }
+  } else if ( data.type === 'auto' ) {
+    automaton.auto( data.name );
+  }
+}
+
+function emitWs( event: EmittingEvent ): void {
+  ipcRenderer.invoke( 'ws', event );
+}
+
 // == commands =====================================================================================
 async function newFile(): Promise<void> {
   const { canceled } = await ipcRenderer.invoke(
@@ -57,6 +89,7 @@ async function saveFile(): Promise<void> {
       message: 'Saved!',
       timeout: 2
     } );
+    emitWs( { type: 'save', data } );
   }
 }
 
@@ -72,6 +105,7 @@ async function saveFileAs(): Promise<void> {
       message: 'Saved!',
       timeout: 2
     } );
+    emitWs( { type: 'save', data } );
   }
 }
 
@@ -100,22 +134,6 @@ automaton.saveContextMenuCommands = [
   }
 ];
 
-// == update loop ==================================================================================
-let time = 0;
-function update(): void {
-  if ( automaton.time === time ) {
-    // we don't have to update!
-  } else {
-    if ( time < automaton.time ) { // moving time backwards
-      automaton.reset();
-    }
-    automaton.update( time );
-  }
-
-  requestAnimationFrame( update );
-}
-update();
-
 // == port dialog ==================================================================================
 const dialogPort = document.getElementById( 'dialogPort' ) as HTMLDialogElement;
 const inputPort = document.getElementById( 'inputPort' ) as HTMLInputElement;
@@ -132,22 +150,6 @@ dialogPort.addEventListener( 'close', () => {
     );
   }
 } );
-
-// == websocket ====================================================================================
-function processWs( raw: string ): void {
-  const data: ReceivingEvent = JSON.parse( raw );
-  if ( data.type === 'update' ) {
-    if ( !isNaN( data.time ) ) {
-      time = data.time;
-    }
-  } else if ( data.type === 'auto' ) {
-    automaton.auto( data.name );
-  }
-}
-
-function emitWs( event: EmittingEvent ): void {
-  ipcRenderer.invoke( 'ws', event );
-}
 
 // == load fx definitions ==========================================================================
 async function loadFxDefinitions(): Promise<void> {

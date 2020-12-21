@@ -20,7 +20,16 @@ export interface EmittingEventSeek {
   time: number;
 }
 
+/**
+ * An event that will be emitted when the user saves the data.
+ */
+export interface EmittingEventSave {
+  type: 'save';
+  data: string;
+}
+
 export type EmittingEvent =
   | EmittingEventPlay
   | EmittingEventPause
-  | EmittingEventSeek;
+  | EmittingEventSeek
+  | EmittingEventSave;
