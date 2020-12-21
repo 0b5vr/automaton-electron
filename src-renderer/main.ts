@@ -1,6 +1,8 @@
 import * as AutomatonFxs from '@fms-cat/automaton-fxs';
 import { AutomatonWithGUI } from '@fms-cat/automaton-with-gui';
-import { FxDefinition } from '@fms-cat/automaton';
+import type { EmittingEvent } from './events/EmittingEvent';
+import type { FxDefinition } from '@fms-cat/automaton';
+import type { ReceivingEvent } from './events/ReceivingEvent';
 import { ipcRenderer } from 'electron';
 
 // == init automaton ===============================================================================
@@ -133,12 +135,16 @@ dialogPort.addEventListener( 'close', () => {
 
 // == websocket ====================================================================================
 function processWs( raw: string ): void {
-  const data = JSON.parse( raw );
+  const data: ReceivingEvent = JSON.parse( raw );
   if ( data.type === 'update' ) {
     if ( !isNaN( data.time ) ) {
       time = data.time;
     }
   }
+}
+
+function emitWs( event: EmittingEvent ): void {
+  ipcRenderer.invoke( 'ws', event );
 }
 
 // == load fx definitions ==========================================================================
@@ -186,13 +192,13 @@ automaton.on( 'changeShouldSave', ( event ) => {
 } );
 
 automaton.on( 'play', () => {
-  ipcRenderer.invoke( 'ws', { type: 'play' } );
+  emitWs( { type: 'play' } );
 } );
 
 automaton.on( 'pause', () => {
-  ipcRenderer.invoke( 'ws', { type: 'pause' } );
+  emitWs( { type: 'pause' } );
 } );
 
 automaton.on( 'seek', ( event ) => {
-  ipcRenderer.invoke( 'ws', { type: 'seek', ...event } );
+  emitWs( { type: 'seek', time: event.time } );
 } );
