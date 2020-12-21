@@ -140,6 +140,8 @@ function processWs( raw: string ): void {
     if ( !isNaN( data.time ) ) {
       time = data.time;
     }
+  } else if ( data.type === 'auto' ) {
+    automaton.auto( data.name );
   }
 }
 
