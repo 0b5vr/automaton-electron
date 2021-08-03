@@ -821,24 +821,24 @@
     global-agent "^2.0.2"
     global-tunnel-ng "^2.7.1"
 
-"@fms-cat/automaton-fxs@4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-fxs/-/automaton-fxs-4.1.0.tgz#a2fd15795954c352bf430106a3ac1847ef47760d"
-  integrity sha512-zJQvK20b5mvXfbrc1PqFiIt5DUJmPRdwdP9IHUpoLplMwM4lZf5yefyO9Gt9HZAm/ct4n+Y+D6cN77QYlm8VEQ==
+"@fms-cat/automaton-fxs@4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-fxs/-/automaton-fxs-4.2.0.tgz#36a07d13f867803496f344833bd61a7c4082a07f"
+  integrity sha512-pMLjWjNLPcFZj4NMfvsJmo+2llo7g4dSu4X2p4fWGVO+kMx/RFrm+VmoJE52UL63Bz2KL4jgWlETi1g9pxlKwg==
   dependencies:
-    "@fms-cat/automaton" "^4.1.0"
+    "@fms-cat/automaton" "^4.2.0"
 
-"@fms-cat/automaton-with-gui@4.1.1":
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-with-gui/-/automaton-with-gui-4.1.1.tgz#a86e5d7a96d29cd3249f1a546024302cfe7f4247"
-  integrity sha512-OlwZzO9fnbuE8kLQuXP6glLRGDIbNFj7e5HsDVdO4hjKYX5AsO5faOhnzYr3I78MusurRUoBCQDQ83tEVU4FBg==
+"@fms-cat/automaton-with-gui@4.2.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-with-gui/-/automaton-with-gui-4.2.0.tgz#a75a3bce38c3516b95f6a3a740ed901ab762fe8d"
+  integrity sha512-lO2iLSdHVWfa/rawSlepyrMYg7nDkbe3iK4vY8mV4Kl41Rxq3YLn1WxDoMTk0Wl7ENwlhSatqRBNAoPoQDU8Xw==
   dependencies:
-    "@fms-cat/automaton" "^4.1.0"
+    "@fms-cat/automaton" "^4.2.0-beta.0"
 
-"@fms-cat/automaton@4.1.0", "@fms-cat/automaton@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@fms-cat/automaton/-/automaton-4.1.0.tgz#d04bb994a4b33e64f2fcc45655f2b68eae9da3eb"
-  integrity sha512-zN3nOSQUAttC1SfmxiCwBw3yi4VFW1HoJbSpSei1p1xSGUsJ+4hTIuaYt9o5COJmq0aCrwglsoPPTSjvko242A==
+"@fms-cat/automaton@4.2.0", "@fms-cat/automaton@^4.2.0", "@fms-cat/automaton@^4.2.0-beta.0":
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/@fms-cat/automaton/-/automaton-4.2.0.tgz#e052fb1dcd31edfdc913864ad4869796675db2ae"
+  integrity sha512-DxBpmBSY7UbqmdlJjzP7at5gSCjCWDzMSIjguRTUb3U7yKqP/bGzk5lwpXf1nZc6hw8+Ui+dFyZsHvkoaXIDlg==
 
 "@iarna/toml@^2.2.0":
   version "2.2.3"
