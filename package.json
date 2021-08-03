@@ -13,7 +13,7 @@
     "renderer-build": "parcel build ./src-renderer/index.html --public-url ./ --target=electron --out-dir dist-renderer",
     "lint": "yarn lint-renderer && yarn lint-main",
     "lint-renderer": "eslint \"src-renderer/**/*.ts\"",
-    "lint-main": "eslint \"src-main/**/*.js\""
+    "lint-main": "eslint \"src-main/**/*.ts\""
   },
   "devDependencies": {
     "@types/recursive-readdir": "^2.2.0",
