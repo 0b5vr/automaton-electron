@@ -30,3 +30,11 @@ export default {
 into
 
 `C:\Users\yutaka\.automaton\fxs\0b5vr\add.js`
+
+## Build
+
+```sh
+yarn
+yarn electron-forge import
+yarn build
+```

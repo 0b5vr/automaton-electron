@@ -1,6 +1,6 @@
 /.cache/
-/dist/
 /dist-main/
 /dist-renderer/
 /node_modules/
+/out/
 **/*.log

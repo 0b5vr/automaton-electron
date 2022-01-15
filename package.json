@@ -3,36 +3,81 @@
   "version": "4.1.1",
   "main": "dist-main/index.js",
   "license": "MIT",
+  "author": "0b5vr",
+  "description": "An Electron client of Automaton",
   "scripts": {
-    "dev": "yarn main-build && concurrently \"yarn electron-dev\" \"yarn renderer-watch\"",
-    "electron-dev": "electron .",
-    "renderer-watch": "parcel ./src-renderer/index.html --public-url ./ --no-hmr --target=electron --out-dir dist-renderer",
-    "build": "yarn main-build && yarn renderer-build && yarn electron-build",
-    "electron-build": "electron-builder --dir",
-    "main-build": "parcel build ./src-main/index.ts --target=electron --out-dir dist-main",
-    "renderer-build": "parcel build ./src-renderer/index.html --public-url ./ --target=electron --out-dir dist-renderer",
+    "dev": "run-p watch-main watch-renderer start-electron",
+    "start-electron": "electron-forge start",
+    "watch-main": "esbuild ./src-main/index.ts --bundle --external:electron --platform=node --format=cjs --watch --outfile=dist-main/index.js",
+    "watch-renderer": "esbuild ./src-renderer/main.ts --bundle --external:electron --watch --outfile=dist-renderer/main.js",
+    "clean": "shx rm -rf dist dist-main dist-renderer",
+    "build": "run-p build-main build-renderer copy-html && run-s build-electron",
+    "build-main": "esbuild ./src-main/index.ts --bundle --external:electron --platform=node --format=cjs --minify --outfile=dist-main/index.js",
+    "build-renderer": "esbuild ./src-renderer/main.ts --bundle --external:electron --minify --outfile=dist-renderer/main.js",
+    "copy-html": "shx cp ./src-renderer/index.html ./dist-renderer/index.html",
+    "build-electron": "electron-forge package",
     "lint": "yarn lint-renderer && yarn lint-main",
     "lint-renderer": "eslint \"src-renderer/**/*.ts\"",
     "lint-main": "eslint \"src-main/**/*.ts\""
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.63",
+    "@electron-forge/maker-deb": "^6.0.0-beta.63",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.63",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
+    "@electron-forge/maker-zip": "^6.0.0-beta.63",
     "@types/recursive-readdir": "^2.2.0",
     "@types/ws": "^7.4.7",
     "@typescript-eslint/eslint-plugin": "^4.29.0",
     "@typescript-eslint/parser": "^4.29.0",
     "concurrently": "^6.2.0",
-    "electron": "^13.1.7",
-    "electron-builder": "^22.11.7",
+    "electron": "^16.0.7",
+    "esbuild": "^0.14.11",
     "eslint": "^7.32.0",
+    "npm-run-all": "^4.1.5",
     "parcel-bundler": "^1.12.5",
+    "shx": "^0.3.4",
     "typescript": "^4.3.5"
   },
   "dependencies": {
     "@0b5vr/automaton": "4.2.1",
     "@0b5vr/automaton-fxs": "4.2.1",
     "@0b5vr/automaton-with-gui": "4.2.1",
+    "electron-squirrel-startup": "^1.0.0",
     "recursive-readdir": "^2.2.2",
     "typeface-roboto": "^1.1.13",
     "ws": "^7.5.3"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {
+        "icon": "icons/icon",
+        "ignore": [
+          "^(?!.*(dist|node_modules|package\\.json)).+$"
+        ]
+      },
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "automaton_electron"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
   }
 }

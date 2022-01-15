@@ -24,7 +24,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: automaton-electron-windows
-        path: dist
+        path: out
   build-mac:
     runs-on: macos-latest
     steps:
@@ -46,7 +46,7 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: automaton-electron-macos
-        path: dist
+        path: out
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -68,4 +68,4 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: automaton-electron-linux
-        path: dist
+        path: out

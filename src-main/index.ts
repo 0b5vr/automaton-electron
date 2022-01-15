@@ -59,7 +59,8 @@ function createWindow(): void {
     minWidth: 480,
     minHeight: 240,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      contextIsolation: false,
     }
   } );
 
