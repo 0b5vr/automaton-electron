@@ -29,7 +29,7 @@ export default {
 
 into
 
-`C:\Users\yutaka\.automaton\fxs\0b5vr\add.js`
+`%USERPROFILE%\.automaton\fxs\0b5vr\add.js`
 
 ## Build
 
