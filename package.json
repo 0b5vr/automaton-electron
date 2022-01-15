@@ -1,6 +1,6 @@
 {
   "name": "automaton-electron",
-  "version": "4.1.1",
+  "version": "4.2.1",
   "main": "dist-main/index.js",
   "license": "MIT",
   "author": "0b5vr",
