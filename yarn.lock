@@ -7,6 +7,25 @@
   resolved "https://registry.yarnpkg.com/7zip-bin/-/7zip-bin-5.1.1.tgz#9274ec7460652f9c632c59addf24efb1684ef876"
   integrity sha512-sAP4LldeWNz0lNzmTird3uWfFDWWTeg6V/MsmyyLR9X1idwKBWIgt/ZvinqQldJm3LecKEs1emkbquO6PCiLVQ==
 
+"@0b5vr/automaton-fxs@4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@0b5vr/automaton-fxs/-/automaton-fxs-4.2.1.tgz#4baee5589985e5726e74f3b74229ed8b7327edf6"
+  integrity sha512-0LSpwQtSqFh+6kHi0KiIRfvBSjWtGpCgxPPuAc6Qqp/yAcsf49zEb6i75B1+rhLi2IXDWM6+K3oeHiiOvRpa/w==
+  dependencies:
+    "@0b5vr/automaton" "4.2.1"
+
+"@0b5vr/automaton-with-gui@4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@0b5vr/automaton-with-gui/-/automaton-with-gui-4.2.1.tgz#21d2de5cb6ed21a474e6294b1f3678b8d4a32d4f"
+  integrity sha512-geV9rf392z7GOvcMPJi5jt+sD+tQwQVZlhn5WEi+o+fkbPD4+ORzqLDcWjsraNz17Bam8GDZ+2xb/zU7Cq4L+A==
+  dependencies:
+    "@0b5vr/automaton" "4.2.1"
+
+"@0b5vr/automaton@4.2.1":
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/@0b5vr/automaton/-/automaton-4.2.1.tgz#9ba2fe920421102940254918ceaa7d5aade747e4"
+  integrity sha512-+co+9owRVycY3EqQhlCQ5iIhnt4Rh4zQOfdbEXN+WRFPfjXhlnwW6ZXA7WRXz9qFQqimuFKZfZLZxy30B/ZnOg==
+
 "@babel/code-frame@7.12.11":
   version "7.12.11"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.12.11.tgz#f4ad435aa263db935b8f10f2c552d23fb716a63f"
@@ -867,25 +886,6 @@
     js-yaml "^3.13.1"
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
-
-"@fms-cat/automaton-fxs@4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-fxs/-/automaton-fxs-4.2.0.tgz#36a07d13f867803496f344833bd61a7c4082a07f"
-  integrity sha512-pMLjWjNLPcFZj4NMfvsJmo+2llo7g4dSu4X2p4fWGVO+kMx/RFrm+VmoJE52UL63Bz2KL4jgWlETi1g9pxlKwg==
-  dependencies:
-    "@fms-cat/automaton" "^4.2.0"
-
-"@fms-cat/automaton-with-gui@4.2.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@fms-cat/automaton-with-gui/-/automaton-with-gui-4.2.0.tgz#a75a3bce38c3516b95f6a3a740ed901ab762fe8d"
-  integrity sha512-lO2iLSdHVWfa/rawSlepyrMYg7nDkbe3iK4vY8mV4Kl41Rxq3YLn1WxDoMTk0Wl7ENwlhSatqRBNAoPoQDU8Xw==
-  dependencies:
-    "@fms-cat/automaton" "^4.2.0-beta.0"
-
-"@fms-cat/automaton@4.2.0", "@fms-cat/automaton@^4.2.0", "@fms-cat/automaton@^4.2.0-beta.0":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@fms-cat/automaton/-/automaton-4.2.0.tgz#e052fb1dcd31edfdc913864ad4869796675db2ae"
-  integrity sha512-DxBpmBSY7UbqmdlJjzP7at5gSCjCWDzMSIjguRTUb3U7yKqP/bGzk5lwpXf1nZc6hw8+Ui+dFyZsHvkoaXIDlg==
 
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"

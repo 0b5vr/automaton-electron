@@ -1,6 +1,6 @@
 import Electron, { BrowserWindow, Menu, MenuItem, app, dialog, ipcMain, shell } from 'electron';
 import WebSocket, { Server } from 'ws';
-import type { ToastyParams } from '@fms-cat/automaton-with-gui';
+import type { ToastyParams } from '@0b5vr/automaton-with-gui';
 import fs from 'fs';
 import path from 'path';
 import recursive from 'recursive-readdir';

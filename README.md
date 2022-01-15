@@ -29,4 +29,4 @@ export default {
 
 into
 
-`C:\Users\yutaka\.automaton\fxs\fms-cat\add.js`
+`C:\Users\yutaka\.automaton\fxs\0b5vr\add.js`

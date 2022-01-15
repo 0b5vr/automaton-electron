@@ -1,7 +1,7 @@
-import * as AutomatonFxs from '@fms-cat/automaton-fxs';
-import { AutomatonWithGUI } from '@fms-cat/automaton-with-gui';
+import * as AutomatonFxs from '@0b5vr/automaton-fxs';
+import { AutomatonWithGUI } from '@0b5vr/automaton-with-gui';
 import type { EmittingEvent } from './events/EmittingEvent';
-import type { FxDefinition } from '@fms-cat/automaton';
+import type { FxDefinition } from '@0b5vr/automaton';
 import type { ReceivingEvent } from './events/ReceivingEvent';
 import { ipcRenderer } from 'electron';
 
