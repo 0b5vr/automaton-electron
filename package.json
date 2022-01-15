@@ -14,7 +14,7 @@
     "build": "run-p build-main build-renderer copy-html && run-s build-electron",
     "build-main": "esbuild ./src-main/index.ts --bundle --external:electron --platform=node --format=cjs --minify --outfile=dist-main/index.js",
     "build-renderer": "esbuild ./src-renderer/main.ts --bundle --external:electron --minify --outfile=dist-renderer/main.js",
-    "copy-html": "shx cp ./src-renderer/index.html ./dist-renderer/index.html",
+    "copy-html": "shx mkdir -p dist-renderer && shx cp ./src-renderer/index.html ./dist-renderer/index.html",
     "build-electron": "electron-forge package",
     "lint": "yarn lint-renderer && yarn lint-main",
     "lint-renderer": "eslint \"src-renderer/**/*.ts\"",
